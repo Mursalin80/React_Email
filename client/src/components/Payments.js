@@ -8,12 +8,12 @@ export const Payments = () => {
   const dispatch = useDispatch();
 
   const onToken = (token) => {
-    // this.props.handleStripeToken(token);
     dispatch(fetchStripeToken(token));
   };
   let user = useSelector((state) => state.user);
 
   console.log({ Pyments_info: user });
+  console.log({ stripe_key: process.env.REACT_APP_STRIPE_KEY });
 
   return (
     <StripeCheckout

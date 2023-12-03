@@ -13,32 +13,24 @@ export const Header = () => {
         return;
       case "":
         return (
-          // <Link to="/auth/google" className="right hide-on-med-and-down">
-          //   Login With Google
-          // </Link>
           <a href="/auth/google" className="right hide-on-med-and-down">
             Login With Google
           </a>
         );
       default:
-        return (
-          // <Link to="/api/logout" className="right ">
-          //   Logout
-          // </Link>
-          [
-            <li key="1">
-              <Payments />
-            </li>,
-            <li key="2" style={{ margin: "0 10px" }}>
-              Credits:{auth.credits}
-            </li>,
-            <li key="3">
-              <a href="/api/logout" className="right ">
-                Logout
-              </a>
-            </li>,
-          ]
-        );
+        return [
+          <li key="1">
+            <Payments />
+          </li>,
+          <li key="2" style={{ margin: "0 10px" }}>
+            Credits:{auth.user.credits}
+          </li>,
+          <li key="3">
+            <a href="/api/logout" className="right ">
+              Logout
+            </a>
+          </li>,
+        ];
     }
   };
   return (
@@ -55,9 +47,5 @@ export const Header = () => {
     </nav>
   );
 };
-
-// const mapStateToPrpos = ({ auth }) => {
-//   return { auth };
-// };
 
 export default Header;

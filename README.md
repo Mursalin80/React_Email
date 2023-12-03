@@ -5,7 +5,7 @@ This app is react.js and redux-Toolkit app with node.js as backend, passport for
 ### Envirement Variables
 
 ```bash
-# Rename the file to .env
+# Rename the file .env.example to .env
 # add envirement variables
 
 # Express app port
@@ -38,6 +38,6 @@ npm run build
 ### Node Express
 
 ```
-nmp i
+npm i
 npm start
 ```

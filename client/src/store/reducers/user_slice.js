@@ -4,29 +4,27 @@ import axios from "axios";
 
 export const fetchUser = createAsyncThunk("users/fetchByIdStatus", async () => {
   const user = await axios.get("/api/current_user");
-  // .then((res) => dispatch({ type: FETCH_USER, payload: res.data }));
+
   console.log({ Fetch_user_Res: user });
 
-  // const response = await userAPI.fetchById(userId);
   return user.data;
-  // return response.data;
 });
 
 export const fetchStripeToken = createAsyncThunk(
   "users/stripeToken",
   async (token) => {
     const stripeToken = await axios.post("/api/stripe", token);
-    // .then((res) => dispatch({ type: FETCH_USER, payload: res.data }));
-    console.log({ stripeToken });
+
+    console.log({ stripeTokenRes: stripeToken });
 
     return stripeToken.data;
-    // return response.data;
   }
 );
 
 const initialState = {
   user: null,
   loading: "idle",
+  credits: 0,
 };
 
 // Then, handle actions in your reducers:
@@ -43,7 +41,7 @@ export const authSlice = createSlice({
       state.user = action.payload;
     });
     builder.addCase(fetchStripeToken.fulfilled, (state, action) => {
-      // Add user to the state array
+      console.log({ stripePaymentPayload: action });
       state.user = { ...state.user, ...action.payload };
     });
   },
