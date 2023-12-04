@@ -17,8 +17,8 @@ const app = express();
 // serve public contents
 
 app.use(express.static(publicPath));
-app.use(bodyParser.json());
-// app.use(express.json());
+// app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // express cookie setup

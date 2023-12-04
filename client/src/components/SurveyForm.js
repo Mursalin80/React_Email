@@ -1,23 +1,36 @@
 import React, { useRef } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const SurveyForm = () => {
+  let auth = useSelector((state) => state.auth);
+
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
   const subjectRef = useRef(null);
   const recipientsRef = useRef(null);
+  const formRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Access field values using refs
-    console.log("Title:", titleRef.current.value);
-    console.log("Body:", bodyRef.current.value);
-    console.log("Subject:", subjectRef.current.value);
-    console.log("Recipients:", recipientsRef.current.value);
-    // You can perform further actions or validations with the field values here
+
+    let survey = await axios.post("/api/survey", {
+      title: titleRef.current.value,
+      body: bodyRef.current.value,
+      subject: subjectRef.current.value,
+      recipients: recipientsRef.current.value,
+    });
+
+    console.log({ survey });
+    // formRef.current.reset();
   };
 
   return (
-    <form style={{ maxWidth: "400px", margin: "auto" }} onSubmit={handleSubmit}>
+    <form
+      style={{ maxWidth: "400px", margin: "auto" }}
+      onSubmit={handleSubmit}
+      ref={formRef}
+    >
       <div style={{ marginBottom: "15px" }}>
         <label style={{ display: "block", marginBottom: "5px" }}>Title</label>
         <input
@@ -76,8 +89,12 @@ const SurveyForm = () => {
           }}
         />
       </div>
-      <button type="submit" style={{ padding: "8px 16px", fontSize: "16px" }}>
-        Submit
+      <button
+        type="submit"
+        disabled={auth.user?.credits < 5}
+        style={{ padding: "8px 16px", fontSize: "16px" }}
+      >
+        {auth.user?.credits < 5 ? "Your credit is less then 5" : "Submit"}
       </button>
     </form>
   );

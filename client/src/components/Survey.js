@@ -6,9 +6,6 @@ import SurveyForm from "./SurveyForm";
 const Survey = () => {
   let auth = useSelector((state) => state.auth);
 
-  console.log({ suryey_user: auth.user });
-
-  //   let survey = null;
   if (auth.user) {
     return <SurveyForm />;
   } else {

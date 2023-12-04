@@ -6,7 +6,7 @@ import Payments from "./Payments";
 
 export const Header = () => {
   let auth = useSelector((state) => state.auth);
-  console.log({ user: auth.user });
+
   const renderLog = () => {
     switch (auth.user) {
       case null:
@@ -71,7 +71,7 @@ export const Header = () => {
 
           <div style={cardStyle}>
             <h2>Your Credits for Survey</h2>
-            <p>Credits:{auth.user?.credits}</p>
+            <h3>Credits:{auth.user?.credits}</h3>
           </div>
         </div>
       ) : null}
