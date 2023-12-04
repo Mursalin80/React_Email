@@ -7,9 +7,7 @@ import "./App.css";
 import { fetchUser } from "./store/reducers/user_slice";
 import Header from "./components/Header";
 import Landing from "./components/Landing";
-const Survey = () => {
-  return <h1>Survey</h1>;
-};
+import Survey from "./components/Survey";
 
 function App() {
   const dispatch = useDispatch();

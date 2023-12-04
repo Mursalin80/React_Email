@@ -13,39 +13,80 @@ export const Header = () => {
         return;
       case "":
         return (
-          <a href="/auth/google" className="right hide-on-med-and-down">
+          <a
+            href="/auth/google"
+            style={{ padding: "8px 16px", fontSize: "16px" }}
+          >
             Login With Google
           </a>
         );
       default:
-        return [
-          <li key="1">
-            <Payments />
-          </li>,
-          <li key="2" style={{ margin: "0 10px" }}>
-            Credits:{auth.user.credits}
-          </li>,
-          <li key="3">
-            <a href="/api/logout" className="right ">
-              Logout
-            </a>
-          </li>,
-        ];
+        return (
+          <a
+            href="/api/logout"
+            style={{ padding: "8px 16px", fontSize: "16px" }}
+          >
+            Logout
+          </a>
+        );
     }
   };
   return (
-    <nav>
-      <div className="nav-wrapper">
-        <Link to="" className="left brand-logo">
-          Emaily
-        </Link>
+    <main>
+      <nav
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px",
+          borderBottom: "1px solid #ccc",
+        }}
+      >
+        <div>
+          <Link to="" className="left brand-logo">
+            Emaily
+          </Link>
+        </div>
+        {renderLog()}
+      </nav>
+      {auth.user ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            margin: "20px 0",
+          }}
+        >
+          <div style={cardStyle}>
+            <h2>Payments</h2>
+            <Payments />
+          </div>
 
-        <ul className="right">
-          <li>{renderLog()}</li>
-        </ul>
-      </div>
-    </nav>
+          <div style={cardStyle}>
+            <h2>Please Join Survey. </h2>
+            <Link to="/survey" className="left brand-logo">
+              Survey
+            </Link>
+          </div>
+
+          <div style={cardStyle}>
+            <h2>Your Credits for Survey</h2>
+            <p>Credits:{auth.user?.credits}</p>
+          </div>
+        </div>
+      ) : null}
+    </main>
   );
+};
+
+const cardStyle = {
+  flex: "1",
+  maxWidth: "300px",
+  padding: "20px",
+  border: "1px solid #ccc",
+  borderRadius: "5px",
+  margin: "0 10px",
+  textAlign: "center",
 };
 
 export default Header;
