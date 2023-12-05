@@ -42,7 +42,14 @@ mongoose
 // routers
 require("./routes/authRouters")(app);
 require("./routes/billingRouter")(app);
-require("./routes/surveyRouter")(app);
+
+//  ********  Send mails  Production         *********
+/** SendGrid Email service, Use for production 
+      require("./routes/surveyRouter")(app);   //  @@@@@ uncommit this line for production  @@@@
+*/
+
+//  ********  Send mails  Development         *********
+require("./services/sendEmailForTest")(app); //  @@@@@ commit this line for production  @@@@
 
 app.listen(PORT, () => {
   console.log(`Express app is running on port ${PORT}`);

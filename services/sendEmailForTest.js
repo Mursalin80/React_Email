@@ -1,28 +1,36 @@
+const nodemailer = require("nodemailer");
 const loginUser = require("../middlewares/requireLogin");
 const requireCredit = require("../middlewares/requireCredit");
 const mongoose = require("mongoose");
 const Survey = mongoose.model("surveys");
 
-const sgMail = require("../utils/sendgrid");
+const transporter = nodemailer.createTransport({
+  host: process.env.ETHEREAL_HOST_NAME,
+  port: process.env.ETHEREAL_PORT,
+  auth: {
+    user: process.env.ETHEREAL_USER_NAME,
+    pass: process.env.ETHEREAL_PASSWORD,
+  },
+});
 
 module.exports = (app) => {
   app.post("/api/survey", loginUser, requireCredit, async (req, res) => {
     const { title, body, subject, recipients } = req.body;
-    let recipientEmails = recipients.split(",");
-    let surveyEmails = recipientEmails.map((email) => ({ email }));
+
+    let surveyEmails = recipients.split(",").map((email) => ({ email }));
 
     let msg = {
       from: "me@samples.mailgun.org",
-      to: recipientEmails,
+      to: recipients,
       subject: subject,
       text: body,
       html: `<p>${title}</p> <br /><strong>and easy to do anywhere, even with Node.js</strong> `,
     };
 
     let survey = null,
-      mailRes;
+      info;
     try {
-      mailRes = await sgMail.sendMultiple(msg);
+      info = await transporter.sendMail(msg);
 
       survey = await new Survey({
         title,
@@ -43,6 +51,6 @@ module.exports = (app) => {
       }
       return res.send(error);
     }
-    res.send({ survey, mailRes });
+    res.send({ survey, mail: info });
   });
 };
