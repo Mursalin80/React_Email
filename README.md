@@ -25,6 +25,12 @@ STRIPE_PUBLISHABLE_kEY=''
 
 # SendGrid API key
 SENDGRID_API_KEY=''
+
+# SendGrid Alternative for email Only for development purpose
+ETHEREAL_HOST_NAME=
+ETHEREAL_PORT=
+ETHEREAL_USER_NAME=
+ETHEREAL_PASSWORD=
 ```
 
 ### Client
