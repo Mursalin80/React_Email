@@ -1,41 +1,56 @@
-import React, { useRef } from "react";
+import React from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+let formSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 to 30 characters").max(30),
+  body: z.string().min(5, "Body must be at least 5 to 500 characters").max(500),
+  subject: z
+    .string()
+    .min(5, "Subject must be at least 5to 50 characters")
+    .max(50),
+  recipients: z
+    .string()
+    .min(5, "Recipients email must be at least 5 characters"),
+});
+// export type TformSchema = z.infer<typeof formSchema>;
 
 const SurveyForm = () => {
   let auth = useSelector((state) => state.auth);
+  let {
+    formState: { errors, isLoading },
+    register,
+    handleSubmit,
+    reset,
+  } = useForm({
+    resolver: zodResolver(formSchema),
+  });
 
-  const titleRef = useRef(null);
-  const bodyRef = useRef(null);
-  const subjectRef = useRef(null);
-  const recipientsRef = useRef(null);
-  const formRef = useRef(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const formSubmit = async ({ title, body, subject, recipients }) => {
     let survey = await axios.post("/api/survey", {
-      title: titleRef.current.value,
-      body: bodyRef.current.value,
-      subject: subjectRef.current.value,
-      recipients: recipientsRef.current.value,
+      title,
+      body,
+      subject,
+      recipients,
     });
 
     console.log({ survey });
-    // formRef.current.reset();
+    reset();
   };
 
   return (
     <form
       style={{ maxWidth: "400px", margin: "auto" }}
-      onSubmit={handleSubmit}
-      ref={formRef}
+      onSubmit={handleSubmit(formSubmit)}
     >
       <div style={{ marginBottom: "15px" }}>
         <label style={{ display: "block", marginBottom: "5px" }}>Title</label>
         <input
           type="text"
-          ref={titleRef}
+          {...register("title")}
           style={{
             padding: "8px",
             width: "100%",
@@ -44,12 +59,15 @@ const SurveyForm = () => {
             fontSize: "16px",
           }}
         />
+        {errors.title && (
+          <p style={{ color: "red" }}>{`${errors.title.message}`}</p>
+        )}
       </div>
       <div style={{ marginBottom: "15px" }}>
         <label style={{ display: "block", marginBottom: "5px" }}>Body</label>
         <input
           type="text"
-          ref={bodyRef}
+          {...register("body")}
           style={{
             padding: "8px",
             width: "100%",
@@ -58,12 +76,15 @@ const SurveyForm = () => {
             fontSize: "16px",
           }}
         />
+        {errors.body && (
+          <p style={{ color: "red" }}>{`${errors.body.message}`}</p>
+        )}
       </div>
       <div style={{ marginBottom: "15px" }}>
         <label style={{ display: "block", marginBottom: "5px" }}>Subject</label>
         <input
           type="text"
-          ref={subjectRef}
+          {...register("subject")}
           style={{
             padding: "8px",
             width: "100%",
@@ -72,6 +93,9 @@ const SurveyForm = () => {
             fontSize: "16px",
           }}
         />
+        {errors.subject && (
+          <p style={{ color: "red" }}>{`${errors.subject.message}`}</p>
+        )}
       </div>
       <div style={{ marginBottom: "15px" }}>
         <label style={{ display: "block", marginBottom: "5px" }}>
@@ -79,7 +103,7 @@ const SurveyForm = () => {
         </label>
         <input
           type="text"
-          ref={recipientsRef}
+          {...register("recipients")}
           style={{
             padding: "8px",
             width: "100%",
@@ -88,10 +112,13 @@ const SurveyForm = () => {
             fontSize: "16px",
           }}
         />
+        {errors.recipients && (
+          <p style={{ color: "red" }}>{`${errors.recipients.message}`}</p>
+        )}
       </div>
       <button
         type="submit"
-        disabled={auth.user?.credits < 5}
+        disabled={auth.user?.credits < 5 || isLoading}
         style={{ padding: "8px 16px", fontSize: "16px" }}
       >
         {auth.user?.credits < 5 ? "Your credit is less then 5" : "Submit"}
